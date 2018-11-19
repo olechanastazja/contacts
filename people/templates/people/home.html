@@ -1,0 +1,7 @@
+{% extends 'people/base.html' %}
+
+{% block content %}
+    {% csrf_token %}
+    <h1>Home Page!!</h1>
+    <h2>Welcome {{ user.username }}</h2>
+{% endblock %}
