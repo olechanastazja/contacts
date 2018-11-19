@@ -11,6 +11,7 @@ def home(request):
 
 class PersonObjectMixin(object):
     model = Person
+
     def get_object(self):
         id = self.kwargs.get('id')
         obj = None
