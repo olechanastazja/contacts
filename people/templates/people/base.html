@@ -23,10 +23,11 @@
             <ul class="nav navbar-nav">
               <li class="active"><a href="{% url 'people:person-list' %}">Home</a></li>
               <li><a href="#">My contacts</a></li>
-              <li><a href="{% url 'user:profile' %}">My profile</a></li>
+
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 {% if user.is_authenticated %}
+                    <li><a href="{% url 'user:profile' %}">My profile</a></li>
                     <li><a href="{% url 'user:logout_user' %}">Logout</a></li>
                 {% else %}
                     <li><a href="{% url 'user:register_user' %}"><span class="glyphicon glyphicon-user"></span> Register</a></li>
@@ -41,7 +42,7 @@
   <div class="container">
 
     {% block content %}
-        
+
     {% endblock %}
 
   </div>

@@ -1,11 +1,36 @@
 {% extends "people/base.html" %}
 {% block content %}
 
-    <div class="content-section">
-        <h1> My contacts</h1>
+    <div class="container" style="width: 75%">
+
+    <h1 align="center">{{request.user|capfirst }}'s contacts</h1>
+
+        <a href="{% url 'people:person-add' %}"><button type="button" class="btn btn-success">Add contact</button></a>
+        <hr class="col" align="center">
+        <table class="table table-dark">
+
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col" style="width: 10%">No</th>
+                <th scope="col" style="width: 30%">First Name</th>
+                <th scope="col" style="width: 30%">Last Name</th>
+                <th scope="col" style="width: 30%">Update</th>
+                <th scope="col" style="width: 30%">Delete</th>
+            </tr>
+
         {% for instance in object_list %}
-             <p>{{ instance }}</p>
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ instance.first_name }}</td>
+                <td>{{ instance.last_name }}</td>
+                <td> <a href="#"><span class="glyphicon glyphicon-pencil"></span></a></td>
+                <td> <a href="#"><span class="glyphicon glyphicon-remove"></span></a></td>
+            </tr>
         {% endfor %}
+
+        </thead>
+    </table>
+
     </div>
 
 {% endblock %}

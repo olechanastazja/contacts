@@ -33,12 +33,13 @@ class PersonCreateView(View):
     def post(self, request, *args, **kwargs):
         form = PersonModelForm(request.POST)
         if form.is_valid():
-            form.save()
+            person = Person(**form.cleaned_data, user=request.user)
+            person.save()
         context = {
             'form': form
         }
         messages.add_message(request, messages.SUCCESS, 'Added person successfully!')
-        return render(request, self.template_name, context)
+        return redirect('people:person-list')
 
 
 class PersonDeleteView(PersonObjectMixin, View):
