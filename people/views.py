@@ -11,6 +11,7 @@ def home(request):
 
 class PersonObjectMixin(object):
     model = Person
+
     def get_object(self):
         id = self.kwargs.get('id')
         obj = None
@@ -62,6 +63,7 @@ class PersonDeleteView(PersonObjectMixin, View):
 
 
 class PersonUpdateView(PersonObjectMixin, View):
+
     template_name = "people/person_update.html"
 
     def get(self, request, id=None, *args, **kwargs):
@@ -78,24 +80,24 @@ class PersonUpdateView(PersonObjectMixin, View):
         # POST method
         context = {}
         obj = self.get_object()
+
         if obj is not None:
             form = PersonModelForm(request.POST, instance=obj)
+
             if form.is_valid():
                 form.save()
             context['object'] = obj
             context['form'] = form
+
         return render(request, self.template_name, context)
 
 
 class PersonListView(View):
     template_name = "people/person_list.html"
-    queryset = Person.objects.all()
-
-    def get_queryset(self):
-        return self.queryset
 
     def get(self, request, *args, **kwargs):
-        context = {'object_list': self.get_queryset()}
+        queryset = Person.objects.filter(user=request.user)
+        context = {'object_list': queryset}
         return render(request, self.template_name, context)
 
 
