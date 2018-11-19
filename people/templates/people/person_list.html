@@ -1,0 +1,11 @@
+{% extends "people/base.html" %}
+{% block content %}
+
+    <div class="content-section">
+        <h1> My contacts</h1>
+        {% for instance in object_list %}
+             <p>{{ instance }}</p>
+        {% endfor %}
+    </div>
+
+{% endblock %}
