@@ -12,17 +12,19 @@
             <thead class="thead-dark">
             <tr>
                 <th scope="col" style="width: 10%">No</th>
-                <th scope="col" style="width: 30%">First Name</th>
-                <th scope="col" style="width: 30%">Last Name</th>
-                <th scope="col" style="width: 30%">Update</th>
-                <th scope="col" style="width: 30%">Delete</th>
+                <th scope="col" style="width: 21%">First Name</th>
+                <th scope="col" style="width: 21%">Last Name</th>
+                <th scope="col" style="width: 16%">Group</th>
+                <th scope="col" style="width: 16%">Update</th>
+                <th scope="col" style="width: 16%">Delete</th>
             </tr>
 
         {% for instance in object_list %}
             <tr>
                 <th scope="row">{{ forloop.counter }}</th>
-                <td>{{ instance.first_name }}</td>
-                <td>{{ instance.last_name }}</td>
+                <td><a href="{% url 'people:person-detail' instance.id %}">{{ instance.first_name }}</a></td>
+                <td><a href="{% url 'people:person-detail' instance.id %}">{{ instance.last_name }}</a></td>
+                <td><a href="#">#Group</a></td>
                 <td> <a href="{% url 'people:person-update' instance.id %}"><span class="glyphicon glyphicon-pencil"></span></a></td>
                 <td> <a href="{% url 'people:person-delete' instance.id %}"><span class="glyphicon glyphicon-remove"></span></a></td>
             </tr>

@@ -3,16 +3,6 @@
 
 {% block content %}
 
-    {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
-
-    <br>
-
     <div class="container" style="width: 75%">
 
          <div class="content-section">
@@ -23,7 +13,7 @@
                     {{ form|crispy }}
                 </fieldset>
                 <div class="form-group">
-                    <input class="btn btn-outline-info" type="submit" value="Save">
+                    <input class="btn btn-info" type="submit" value="Save">
                 </div>
              </form>
         </div>

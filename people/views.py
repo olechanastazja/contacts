@@ -86,6 +86,7 @@ class PersonUpdateView(PersonObjectMixin, View):
                 form.save()
             context['object'] = obj
             context['form'] = form
+            return redirect('people:person-list')
 
         return render(request, self.template_name, context)
 
