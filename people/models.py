@@ -36,10 +36,4 @@ class EmailAddress(models.Model):
     person = models.ForeignKey(Person, on_delete=models.CASCADE)
 
 
-class Group(models.Model):
-    name = models.CharField(max_length=100)
-    people = models.ManyToManyField(Person)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-
-
 

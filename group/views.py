@@ -1,16 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
-from .forms import PersonModelForm
-from django.contrib import messages
-from .models import Person
+from .models import Group
+from .forms import GroupModelForm
 
 
-def home(request):
-    return render(request, 'people/home.html')
-
-
-class PersonObjectMixin(object):
-    model = Person
+class GroupObjectMixin(object):
+    model = Group
 
     def get_object(self):
         id = self.kwargs.get('id')
@@ -20,27 +15,26 @@ class PersonObjectMixin(object):
         return obj
 
 
-class PersonCreateView(View):
-    template_name = 'people/person_create.html'
+class GroupCreateView(View):
+    template_name = 'group/group_create.html'
 
     def get(self, request, *args, **kwargs):
-        form = PersonModelForm()
+        form = GroupModelForm()
         context = {
             'form': form
         }
         return render(request, self.template_name,context)
 
     def post(self, request, *args, **kwargs):
-        form = PersonModelForm(request.POST)
+        form = GroupModelForm(request.POST)
         if form.is_valid():
-            person = Person(**form.cleaned_data, user=request.user)
-            person.save()
-        messages.add_message(request, messages.SUCCESS, 'Added person successfully!')
-        return redirect('people:person-list')
+            group = Group(**form.cleaned_data, user=request.user)
+            group.save()
+        return redirect('group:group-list')
 
 
-class PersonDeleteView(PersonObjectMixin, View):
-    template_name = 'people/person_delete.html'
+class GroupDeleteView(GroupObjectMixin, View):
+    template_name = 'group/group_delete.html'
 
     def get(self, request, id=None, *args, **kwargs):
         context = {}
@@ -60,16 +54,16 @@ class PersonDeleteView(PersonObjectMixin, View):
         return render(request, self.template_name, context)
 
 
-class PersonUpdateView(PersonObjectMixin, View):
+class GroupUpdateView(GroupObjectMixin, View):
 
-    template_name = "people/person_update.html"
+    template_name = "group/group_update.html"
 
     def get(self, request, id=None, *args, **kwargs):
         # GET method
         context = {}
         obj = self.get_object()
         if obj is not None:
-            form = PersonModelForm(instance=obj)
+            form = GroupModelForm(instance=obj)
             context['object'] = obj
             context['form'] = form
         return render(request, self.template_name, context)
@@ -80,31 +74,29 @@ class PersonUpdateView(PersonObjectMixin, View):
         obj = self.get_object()
 
         if obj is not None:
-            form = PersonModelForm(request.POST, instance=obj)
+            form = GroupModelForm(request.POST, instance=obj)
 
             if form.is_valid():
                 form.save()
             context['object'] = obj
             context['form'] = form
 
-        return render(request, self.template_name, context)
+        return redirect('group:group-list')
 
 
-class PersonListView(View):
-    template_name = "people/person_list.html"
+class GroupListView(View):
+    template_name = "group/group_list.html"
 
     def get(self, request, *args, **kwargs):
-        queryset = Person.objects.filter(user=request.user)
+        queryset = Group.objects.filter(user=request.user)
         context = {'object_list': queryset}
         return render(request, self.template_name, context)
 
 
-class PersonView(PersonObjectMixin, View):
-    template_name = "people/person_detail.html"
+class GroupView(GroupObjectMixin, View):
+    template_name = "group/group_detail.html"
 
     def get(self, request, id=None, *args, **kwargs):
         context = {'object': self.get_object()}
         return render(request, self.template_name, context)
-
-
 

@@ -4,9 +4,7 @@ from .views import (home,
                     PersonListView,
                     PersonView,
                     PersonUpdateView,
-                    PersonDeleteView,
-                    GroupListView,
-                    GroupCreateView)
+                    PersonDeleteView)
 
 app_name = 'people'
 urlpatterns = [
@@ -15,6 +13,4 @@ urlpatterns = [
     # re_path(r'^person/show/(?P<id>[0-9]+)/$', PersonView.as_view(), name='person-detail'),
     re_path(r'^person/update/(?P<id>[0-9]+)/$', PersonUpdateView.as_view(), name='person-update'),
     re_path(r'^person/delete/(?P<id>[0-9]+)/$', PersonDeleteView.as_view(), name='person-delete'),
-    path('group/new', GroupCreateView.as_view(), name="group-add"),
-    path('group/', GroupListView.as_view(), name='group-list'),
 ]

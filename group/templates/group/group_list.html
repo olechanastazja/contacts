@@ -5,7 +5,7 @@
 
     <h1 align="center">{{request.user|capfirst }}'s groups</h1>
 
-        <a href="{% url 'people:group-add' %}"><button type="button" class="btn btn-success">Add group</button></a>
+        <a href="{% url 'group:group-add' %}"><button type="button" class="btn btn-success">Add group</button></a>
         <hr class="col" align="center">
         <table class="table table-dark">
 
@@ -21,8 +21,8 @@
             <tr>
                 <th scope="row">{{ forloop.counter }}</th>
                 <td>{{ instance.name }}</td>
-                <td> <a href="#"><span class="glyphicon glyphicon-pencil"></span></a></td>
-                <td> <a href="#"><span class="glyphicon glyphicon-remove"></span></a></td>
+                <td> <a href="{% url 'group:group-update' instance.id %}"><span class="glyphicon glyphicon-pencil"></span></a></td>
+                <td> <a href="{% url 'group:group-delete' instance.id %}"><span class="glyphicon glyphicon-remove"></span></a></td>
             </tr>
         {% endfor %}
 
