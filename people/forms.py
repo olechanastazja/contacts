@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Person
+from .models import Person, Group
 
 
 class PersonModelForm(forms.ModelForm):
@@ -11,4 +11,7 @@ class PersonModelForm(forms.ModelForm):
         ]
 
 
-
+class GroupModelForm(forms.ModelForm):
+    class Meta:
+        model = Group
+        fields = ['name']
