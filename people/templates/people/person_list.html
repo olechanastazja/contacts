@@ -23,8 +23,8 @@
                 <th scope="row">{{ forloop.counter }}</th>
                 <td>{{ instance.first_name }}</td>
                 <td>{{ instance.last_name }}</td>
-                <td> <a href="#"><span class="glyphicon glyphicon-pencil"></span></a></td>
-                <td> <a href="#"><span class="glyphicon glyphicon-remove"></span></a></td>
+                <td> <a href="{% url 'people:person-update' instance.id %}"><span class="glyphicon glyphicon-pencil"></span></a></td>
+                <td> <a href="{% url 'people:person-delete' instance.id %}"><span class="glyphicon glyphicon-remove"></span></a></td>
             </tr>
         {% endfor %}
 

@@ -40,7 +40,7 @@ class PersonCreateView(View):
 
 
 class PersonDeleteView(PersonObjectMixin, View):
-    template_name = 'people/person_detail.html'
+    template_name = 'people/person_delete.html'
 
     def get(self, request, id=None, *args, **kwargs):
         context = {}
