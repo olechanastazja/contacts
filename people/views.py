@@ -86,22 +86,23 @@ class PersonUpdateView(PersonObjectMixin, View):
             context['form'] = form
         return render(request, self.template_name, context)
 
-# class CourseListView(View):
-#     template_name = "courses/course_list.html"
-#     queryset = Course.objects.all()
-#
-#     def get_queryset(self):
-#         return self.queryset
-#
-#     def get(self, request, *args, **kwargs):
-#         context = {'object_list': self.get_queryset()}
-#         return render(request, self.template_name, context)
+
+class PersonListView(View):
+    template_name = "people/person_list.html"
+    queryset = Person.objects.all()
+
+    def get_queryset(self):
+        return self.queryset
+
+    def get(self, request, *args, **kwargs):
+        context = {'object_list': self.get_queryset()}
+        return render(request, self.template_name, context)
 
 
-# class CourseView(CourseObjectMixin, View):
-#     template_name = "courses/course_detail.html" # DetailView
-#     def get(self, request, id=None, *args, **kwargs):
-#         # GET method
-#         context = {'object': self.get_object()}
-#         return render(request, self.template_name, context)
-#
+class PersonView(PersonObjectMixin, View):
+    template_name = "people/person_detail.html"
+
+    def get(self, request, id=None, *args, **kwargs):
+        context = {'object': self.get_object()}
+        return render(request, self.template_name, context)
+
