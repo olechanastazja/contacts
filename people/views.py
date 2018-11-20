@@ -56,16 +56,13 @@ class PersonDeleteView(PersonObjectMixin, View):
             obj.delete()
             context['object'] = None
             return redirect('/')
-
         return render(request, self.template_name, context)
 
 
 class PersonUpdateView(PersonObjectMixin, View):
-
     template_name = "people/person_update.html"
 
     def get(self, request, id=None, *args, **kwargs):
-        # GET method
         context = {}
         obj = self.get_object()
         if obj is not None:
@@ -75,10 +72,8 @@ class PersonUpdateView(PersonObjectMixin, View):
         return render(request, self.template_name, context)
 
     def post(self, request, id=None,  *args, **kwargs):
-        # POST method
         context = {}
         obj = self.get_object()
-
         if obj is not None:
             form = PersonModelForm(request.POST, instance=obj)
 
@@ -87,7 +82,6 @@ class PersonUpdateView(PersonObjectMixin, View):
             context['object'] = obj
             context['form'] = form
             return redirect('people:person-list')
-
         return render(request, self.template_name, context)
 
 
