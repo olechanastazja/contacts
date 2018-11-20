@@ -5,9 +5,15 @@
 
     <h1 align="center">{{request.user|capfirst }}'s contacts</h1>
 
+        <form id="search" method="POST" action="{% url 'people:search'  %}">
+            {% csrf_token %}
+            <input type="text" class="form-control" id='txtSearch' name='txtSearch'>
+            <button type="submit" class="btn btn-default btn-submit">Submit</button>
+        </form>
+
         <a href="{% url 'people:person-add' %}"><button type="button" class="btn btn-success">Add contact</button></a>
         <hr class="col" align="center">
-        <table class="table table-bordered">
+        <table class="table table-dark">
 
             <thead>
             <tr class="active">

@@ -3,6 +3,8 @@ from django.views import View
 from .forms import PersonModelForm
 from django.contrib import messages
 from .models import Person
+import json
+from django.http import HttpResponse
 
 
 def home(request):
@@ -24,18 +26,19 @@ class PersonCreateView(View):
     template_name = 'people/person_create.html'
 
     def get(self, request, *args, **kwargs):
-        form = PersonModelForm()
+        form = PersonModelForm(request.user)
         context = {
             'form': form
         }
         return render(request, self.template_name,context)
 
     def post(self, request, *args, **kwargs):
-        form = PersonModelForm(request.POST)
+        form = PersonModelForm(request.user,request.POST)
         if form.is_valid():
-            person = Person(**form.cleaned_data, user=request.user)
+            # person = Person(**form.cleaned_data, user=request.user)
+            person = form.save(commit=False)
+            person.user = request.user
             person.save()
-        messages.add_message(request, messages.SUCCESS, 'Added person successfully!')
         return redirect('people:person-list')
 
 
@@ -90,7 +93,10 @@ class PersonListView(View):
 
     def get(self, request, *args, **kwargs):
         queryset = Person.objects.filter(user=request.user)
-        context = {'object_list': queryset}
+        context = {
+            'object_list': queryset,
+            'contacts_page': 'active'
+        }
         return render(request, self.template_name, context)
 
 
@@ -102,4 +108,15 @@ class PersonView(PersonObjectMixin, View):
         return render(request, self.template_name, context)
 
 
-
+def autocompleteModel(request):
+    if request.is_ajax():
+        q = request.GET.get('term', '').capitalize()
+        search_qs = Person.objects.filter(first_name__startswith=q)
+        results = []
+        for r in search_qs:
+            results.append(r.FIELD)
+        data = json.dumps(results)
+    else:
+        data = 'fail'
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)
