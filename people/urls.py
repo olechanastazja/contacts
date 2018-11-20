@@ -1,10 +1,12 @@
 from django.urls import path, re_path
+from django.conf.urls import url
 from .views import (home,
                     PersonCreateView,
                     PersonListView,
                     PersonView,
                     PersonUpdateView,
-                    PersonDeleteView)
+                    PersonDeleteView,
+                    autocompleteModel)
 
 app_name = 'people'
 urlpatterns = [
@@ -13,4 +15,6 @@ urlpatterns = [
     re_path(r'^person/detail/(?P<id>[0-9]+)/$', PersonView.as_view(), name='person-detail'),
     re_path(r'^person/update/(?P<id>[0-9]+)/$', PersonUpdateView.as_view(), name='person-update'),
     re_path(r'^person/delete/(?P<id>[0-9]+)/$', PersonDeleteView.as_view(), name='person-delete'),
+    # path('ajax/search-users/', search_users, name='people:search'),
+    url(r'^ajax_calls/search/', autocompleteModel, name='search'),
 ]

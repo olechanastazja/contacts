@@ -3,6 +3,8 @@ from django.views import View
 from .forms import PersonModelForm
 from django.contrib import messages
 from .models import Person
+import json
+from django.http import HttpResponse
 
 
 def home(request):
@@ -112,4 +114,15 @@ class PersonView(PersonObjectMixin, View):
         return render(request, self.template_name, context)
 
 
-
+def autocompleteModel(request):
+    if request.is_ajax():
+        q = request.GET.get('term', '').capitalize()
+        search_qs = Person.objects.filter(first_name__startswith=q)
+        results = []
+        for r in search_qs:
+            results.append(r.FIELD)
+        data = json.dumps(results)
+    else:
+        data = 'fail'
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)
