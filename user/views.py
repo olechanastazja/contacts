@@ -8,12 +8,10 @@ def register(request):
 
     if request.method == "POST":
         form = UserRegistrationForm(request.POST)
-
         if form.is_valid():
             form.save()
             messages.success(request, 'Your account has been created. Now you can log in')
             return redirect('user:login_user')
-
     elif request.method == "GET":
         form = UserRegistrationForm()
 
