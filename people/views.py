@@ -35,10 +35,10 @@ class PersonCreateView(View):
     def post(self, request, *args, **kwargs):
         form = PersonModelForm(request.user,request.POST)
         if form.is_valid():
-            # person = Person(**form.cleaned_data, user=request.user)
             person = form.save(commit=False)
             person.user = request.user
             person.save()
+            person.group.set(form.cleaned_data['group'])
         return redirect('people:person-list')
 
 
@@ -105,6 +105,18 @@ class PersonView(PersonObjectMixin, View):
 
     def get(self, request, id=None, *args, **kwargs):
         context = {'object': self.get_object()}
+        return render(request, self.template_name, context)
+
+
+class PersonGroupsView(PersonObjectMixin, View):
+    template_name = "people/group_people.html"
+
+    def get(self, request, id, *args, **kwargs):
+        person = self.get_object()
+        context = {
+            'person': person,
+            'groups': person.group.all()
+        }
         return render(request, self.template_name, context)
 
 

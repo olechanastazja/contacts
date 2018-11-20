@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 from .models import Group
 from .forms import GroupModelForm
+from people.models import Person
 
 
 class GroupObjectMixin(object):
@@ -100,6 +101,11 @@ class GroupView(GroupObjectMixin, View):
     template_name = "group/group_detail.html"
 
     def get(self, request, id=None, *args, **kwargs):
-        context = {'object': self.get_object()}
+        group = self.get_object()
+        people = Person.objects.filter(group=group)
+        context = {
+            'object': group,
+            'people': people
+        }
         return render(request, self.template_name, context)
 

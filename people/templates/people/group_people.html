@@ -1,0 +1,30 @@
+{% extends 'people/base.html' %}
+
+{% block content %}
+    <div class="container" style="width: 75%">
+         <legend class="border-bottom mb-4">{{person|capfirst }}'s groups</legend>
+
+        <table class="table table-dark">
+
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col" style="width: 25%">No</th>
+                <th scope="col" style="width: 50%">Group name</th>
+                <th scope="col" style="width: 25%;text-align: center">See</th>
+            </tr>
+            {% for group in groups  %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ group }}</td>
+                <td style="text-align: center"><a href="{% url 'group:group-detail' id=group.id %}"><span class="glyphicon glyphicon-zoom-in"></span></a></td>
+            </tr>
+            {% endfor %}
+            </thead>
+        </table>
+
+        <div class="form-group">
+             <a class="btn btn-default" href="{% url 'people:person-list' %}">Go Back</a>
+        </div>
+
+    </div>
+{% endblock %}

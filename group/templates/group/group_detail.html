@@ -1,0 +1,32 @@
+{% extends 'people/base.html' %}
+
+{% block content %}
+    <div class="container" style="width: 75%">
+         <legend class="border-bottom mb-4">{{ object }}</legend>
+
+        <table class="table table-dark">
+
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col" style="width: 25%">No</th>
+                <th scope="col" style="width: 25%">First Name</th>
+                <th scope="col" style=" width: 25%">Last Name</th>
+                <th scope="col" style=" width: 25%;text-align: center">Details</th>
+            </tr>
+            {% for person in people %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td><a href="{% url 'people:person-detail' id=person.id %}">{{ person.first_name }}</a></td>
+                <td><a href="{% url 'people:person-detail' id=person.id %}">{{ person.last_name }}</a></td>
+                <td style="text-align: center"><a href="{% url 'people:person-detail' id=person.id %}"><span class="glyphicon glyphicon-zoom-in"></span></a></td>
+            </tr>
+            {% endfor %}
+            </thead>
+        </table>
+
+        <div class="form-group">
+             <a class="btn btn-default" href="{% url 'people:person-list' %}">Go to list</a>
+        </div>
+
+    </div>
+{% endblock %}
