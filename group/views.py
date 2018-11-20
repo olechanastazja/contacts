@@ -89,7 +89,10 @@ class GroupListView(View):
 
     def get(self, request, *args, **kwargs):
         queryset = Group.objects.filter(user=request.user)
-        context = {'object_list': queryset}
+        context = {
+            'object_list': queryset,
+            'group_page': 'active'
+        }
         return render(request, self.template_name, context)
 
 
