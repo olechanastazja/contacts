@@ -6,7 +6,7 @@ from .views import (home,
                     PersonView,
                     PersonUpdateView,
                     PersonDeleteView,
-                    autocompleteModel,
+                    load_persons,
                     PersonGroupsView)
 
 app_name = 'people'
@@ -17,4 +17,5 @@ urlpatterns = [
     re_path(r'^person/update/(?P<id>[0-9]+)/$', PersonUpdateView.as_view(), name='person-update'),
     re_path(r'^person/delete/(?P<id>[0-9]+)/$', PersonDeleteView.as_view(), name='person-delete'),
     re_path(r'^(?P<id>[0-9]+)/groups/$', PersonGroupsView.as_view(), name='person-groups'),
+    url(r'^ajax_calls/search/', load_persons, name='search'),
 ]

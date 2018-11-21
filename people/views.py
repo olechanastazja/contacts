@@ -5,7 +5,7 @@ from .forms import PersonModelForm
 from group.models import Group
 from .models import Person
 import json
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 
 
 def home(request):
@@ -125,15 +125,8 @@ class PersonGroupsView(PersonObjectMixin, View):
         return render(request, self.template_name, context)
 
 
-def autocompleteModel(request):
-    if request.is_ajax():
-        q = request.GET.get('term', '').capitalize()
-        search_qs = Person.objects.filter(first_name__startswith=q)
-        results = []
-        for r in search_qs:
-            results.append(r.FIELD)
-        data = json.dumps(results)
-    else:
-        data = 'fail'
-    mimetype = 'application/json'
-    return HttpResponse(data, mimetype)
+def load_persons(request):
+    q = request.GET.get('term', ' ').capitalize()
+    search_qs = Person.objects.filter(user=request.user, first_name__startswith=q) | \
+                Person.objects.filter(user=request.user, last_name__startswith=q)
+    return render(request, 'people/ajax_list.html', {'object_list': search_qs})
