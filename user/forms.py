@@ -20,6 +20,9 @@ class UserUpdateForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['username', 'email']
+        help_texts = {
+            'username': None,
+        }
 
 
 class ProfileUpdateForm(forms.ModelForm):

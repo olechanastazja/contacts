@@ -152,7 +152,7 @@ class AddressCreate(PersonObjectMixin, View):
                 address.save()
                 address.people.add(obj) # Relacja many to many wymusza add zamiast set, ale jest to wymagane w warsztacie
                 return redirect("people:person-list")
-            
+
         form = AddressModelForm()
         context = {
             'object': obj,

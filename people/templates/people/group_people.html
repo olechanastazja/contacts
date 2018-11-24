@@ -4,10 +4,10 @@
     <div class="container" style="width: 75%">
          <legend class="border-bottom mb-4">{{person|capfirst }}'s groups</legend>
 
-        <table class="table table-dark">
+        <table class="table table-bordered">
 
             <thead class="thead-dark">
-            <tr>
+            <tr class="active">
                 <th scope="col" style="width: 25%">No</th>
                 <th scope="col" style="width: 50%">Group name</th>
                 <th scope="col" style="width: 25%;text-align: center">See</th>
@@ -23,7 +23,7 @@
         </table>
 
         <div class="form-group">
-             <a class="btn btn-default" href="{% url 'people:person-list' %}">Go Back</a>
+             <a class="btn btn-primary" href="{% url 'people:person-list' %}">Go Back</a>
         </div>
 
     </div>
