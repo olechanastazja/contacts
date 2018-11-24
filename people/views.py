@@ -1,11 +1,7 @@
-from django.forms import modelformset_factory
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
-from .forms import PersonModelForm
-from group.models import Group
+from .forms import PersonModelForm, AddressModelForm, PhoneModelForm, EmailModelForm
 from .models import Person
-import json
-from django.http import HttpResponse, JsonResponse
 
 
 def home(request):
@@ -82,9 +78,6 @@ class PersonUpdateView(PersonObjectMixin, View):
         obj = self.get_object()
         if obj is not None:
             form = PersonModelForm(instance=obj, user=request.user, data=request.POST)
-            print(obj)
-            print(request.user)
-            print(request.POST)
             if form.is_valid():
                 form.save()
             context['object'] = obj
@@ -130,3 +123,107 @@ def load_persons(request):
     search_qs = Person.objects.filter(user=request.user, first_name__startswith=q) | \
                 Person.objects.filter(user=request.user, last_name__startswith=q)
     return render(request, 'people/ajax_list.html', {'object_list': search_qs})
+
+
+class AddressCreate(PersonObjectMixin, View):
+
+    template_name = "address/address_add.html"
+
+    def get(self, request, id=None, *args, **kwargs):
+        context = {}
+        obj = self.get_object()
+        print(obj.id)
+        if obj is not None:
+            form = AddressModelForm(instance=obj)
+            context = {
+                'object': obj,
+                'form': form
+            }
+
+        return render(request, self.template_name, context)
+
+    def post(self, request, id=None, *args, **kwargs):
+        context = {}
+        obj = self.get_object()
+        if obj is not None:
+            form = AddressModelForm(request.POST)
+            if form.is_valid():
+                address = form.save(commit=False)
+                address.save()
+                address.people.add(obj) # Relacja many to many wymusza add zamiast set, ale jest to wymagane w warsztacie
+                return redirect("people:person-list")
+            
+        form = AddressModelForm()
+        context = {
+            'object': obj,
+            'form': form
+        }
+
+        return render(request, self.template_name, context)
+
+
+class PhoneCreate(PersonObjectMixin, View):
+    template_name = "phone/phone_add.html"
+
+    def get(self, request, id=None, *args, **kwargs):
+        context = {}
+        obj = self.get_object()
+        if obj is not None:
+            form = PhoneModelForm(instance=obj)
+            context = {
+                'object': obj,
+                'form': form
+            }
+
+        return render(request, self.template_name, context)
+
+    def post(self, request, id=None, *args, **kwargs):
+        context = {}
+        obj = self.get_object()
+        if obj is not None:
+            form = PhoneModelForm(request.POST)
+            if form.is_valid():
+                phone = form.save(commit=False)
+                phone.person = obj
+                phone.save()
+                return redirect("people:person-list")
+
+        form = PhoneModelForm()
+        context = {
+            'object': obj,
+            'form': form
+        }
+        return render(request, self.template_name, context)
+
+
+class EmailCreate(PersonObjectMixin, View):
+    template_name = "email/email_add.html"
+
+    def get(self, request, id=None, *args, **kwargs):
+        context = {}
+        obj = self.get_object()
+        if obj is not None:
+            form = EmailModelForm(instance=obj)
+            context = {
+                'object': obj,
+                'form': form
+            }
+        return render(request, self.template_name, context)
+
+    def post(self, request, id=None, *args, **kwargs):
+        context = {}
+        obj = self.get_object()
+        if obj is not None:
+            form = EmailModelForm(request.POST)
+            if form.is_valid():
+                email = form.save(commit=False)
+                email.person = obj
+                email.save()
+                return redirect("people:person-list")
+
+        form = EmailModelForm()
+        context = {
+            'object': obj,
+            'form': form
+        }
+        return render(request, self.template_name, context)

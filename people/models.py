@@ -3,6 +3,16 @@ from django.core.validators import RegexValidator
 from django.contrib.auth.models import User
 from group.models import Group
 
+PHONE_CHOICES = (
+    ("private", "private"),
+    ("work", "work"),
+)
+
+EMAIL_CHOICES = (
+    ("private", "private"),
+    ("work", "work"),
+)
+
 
 class Person(models.Model):
     first_name = models.CharField(max_length=100, null=False, blank=False)
@@ -29,14 +39,20 @@ class PhoneNumber(models.Model):
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="""Phone number must be entered in the format: 
                                                                     '+999999999'. Up to 15 digits allowed.""")
     phone_number = models.CharField(validators=[phone_regex], max_length=17, blank=True)
-    type = models.CharField(max_length=50)
+    type = models.CharField(choices=PHONE_CHOICES, max_length=10)
     person = models.ForeignKey(Person, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'Phone of {self.person.__str__()}'
 
 
 class EmailAddress(models.Model):
     email = models.EmailField()
-    type = models.CharField(max_length=50)
+    type = models.CharField(choices=EMAIL_CHOICES, max_length=50)
     person = models.ForeignKey(Person, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'Email of {self.person.__str__()}'
 
 
 
