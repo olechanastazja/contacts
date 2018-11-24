@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 from .forms import PersonModelForm, AddressModelForm, PhoneModelForm, EmailModelForm
 from .models import Person
+from django.contrib import messages
 
 
 def home(request):
@@ -187,7 +188,7 @@ class PhoneCreate(PersonObjectMixin, View):
                 phone.person = obj
                 phone.save()
                 return redirect("people:person-list")
-
+        messages.error(request, form.errors.get('phone_number'))
         form = PhoneModelForm()
         context = {
             'object': obj,
@@ -222,6 +223,8 @@ class EmailCreate(PersonObjectMixin, View):
                 return redirect("people:person-list")
 
         form = EmailModelForm()
+        print(form.errors)
+        messages.error(request, 'Invalid data! Correct that and try again!')
         context = {
             'object': obj,
             'form': form
