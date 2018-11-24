@@ -8,6 +8,8 @@ class Person(models.Model):
     first_name = models.CharField(max_length=100, null=False, blank=False)
     last_name = models.CharField(max_length=100, null=False, blank=False)
     description = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     group = models.ManyToManyField(Group, related_name='group')
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
 
