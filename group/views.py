@@ -3,6 +3,7 @@ from django.views import View
 from .models import Group
 from .forms import GroupModelForm
 from people.models import Person
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class GroupObjectMixin(object):
@@ -16,7 +17,7 @@ class GroupObjectMixin(object):
         return obj
 
 
-class GroupCreateView(View):
+class GroupCreateView(LoginRequiredMixin, View):
     template_name = 'group/group_create.html'
 
     def get(self, request, *args, **kwargs):
@@ -34,7 +35,7 @@ class GroupCreateView(View):
         return redirect('group:group-list')
 
 
-class GroupDeleteView(GroupObjectMixin, View):
+class GroupDeleteView(LoginRequiredMixin,GroupObjectMixin, View):
     template_name = 'group/group_delete.html'
 
     def get(self, request, id=None, *args, **kwargs):
@@ -55,8 +56,7 @@ class GroupDeleteView(GroupObjectMixin, View):
         return render(request, self.template_name, context)
 
 
-class GroupUpdateView(GroupObjectMixin, View):
-
+class GroupUpdateView(LoginRequiredMixin, GroupObjectMixin, View):
     template_name = "group/group_update.html"
 
     def get(self, request, id=None, *args, **kwargs):
@@ -85,7 +85,7 @@ class GroupUpdateView(GroupObjectMixin, View):
         return redirect('group:group-list')
 
 
-class GroupListView(View):
+class GroupListView(LoginRequiredMixin,View):
     template_name = "group/group_list.html"
 
     def get(self, request, *args, **kwargs):
