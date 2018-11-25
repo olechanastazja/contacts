@@ -3,7 +3,7 @@ from django.views import View
 from .forms import PersonModelForm, AddressModelForm, PhoneModelForm, EmailModelForm
 from .models import Person, Address, PhoneNumber, EmailAddress
 from django.contrib import messages
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 def home(request):
     return render(request, 'people/home.html')
@@ -53,7 +53,7 @@ class EmailObjectMixin(object):
         return obj
 
 
-class PersonCreateView(View):
+class PersonCreateView(LoginRequiredMixin, View):
     template_name = 'people/person_create.html'
 
     def get(self, request, *args, **kwargs):
@@ -73,7 +73,7 @@ class PersonCreateView(View):
         return redirect('people:person-list')
 
 
-class PersonDeleteView(PersonObjectMixin, View):
+class PersonDeleteView(LoginRequiredMixin, PersonObjectMixin, View):
     template_name = 'people/person_delete.html'
 
     def get(self, request, id=None, *args, **kwargs):
@@ -93,7 +93,7 @@ class PersonDeleteView(PersonObjectMixin, View):
         return render(request, self.template_name, context)
 
 
-class PersonUpdateView(PersonObjectMixin, View):
+class PersonUpdateView(LoginRequiredMixin,PersonObjectMixin, View):
     template_name = "people/person_update.html"
 
     def get(self, request, id=None, *args, **kwargs):
@@ -120,7 +120,7 @@ class PersonUpdateView(PersonObjectMixin, View):
         return render(request, self.template_name, context)
 
 
-class PersonListView(View):
+class PersonListView(LoginRequiredMixin,View):
     template_name = "people/person_list.html"
 
     def get(self, request, *args, **kwargs):
@@ -132,7 +132,7 @@ class PersonListView(View):
         return render(request, self.template_name, context)
 
 
-class PersonView(PersonObjectMixin, View):
+class PersonView(LoginRequiredMixin,PersonObjectMixin, View):
     template_name = "people/person_detail.html"
 
     def get(self, request, id=None, *args, **kwargs):
@@ -140,7 +140,7 @@ class PersonView(PersonObjectMixin, View):
         return render(request, self.template_name, context)
 
 
-class PersonGroupsView(PersonObjectMixin, View):
+class PersonGroupsView(LoginRequiredMixin,PersonObjectMixin, View):
     template_name = "people/group_people.html"
 
     def get(self, request, id, *args, **kwargs):
@@ -159,7 +159,7 @@ def load_persons(request):
     return render(request, 'people/ajax_list.html', {'object_list': search_qs})
 
 
-class AddressCreate(PersonObjectMixin, View):
+class AddressCreate(LoginRequiredMixin,PersonObjectMixin, View):
 
     template_name = "address/address_add.html"
 
@@ -196,7 +196,7 @@ class AddressCreate(PersonObjectMixin, View):
         return render(request, self.template_name, context)
 
 
-class AddressUpdate(AddressObjectMixin, View):
+class AddressUpdate(LoginRequiredMixin,AddressObjectMixin, View):
     template_name = "address/address_edit.html"
 
     def get(self, request, id=None, *args, **kwargs):
@@ -230,7 +230,7 @@ class AddressUpdate(AddressObjectMixin, View):
         return redirect(request, self.template_name, context)
 
 
-class PhoneCreate(PersonObjectMixin, View):
+class PhoneCreate(LoginRequiredMixin,PersonObjectMixin, View):
     template_name = "phone/phone_add.html"
 
     def get(self, request, id=None, *args, **kwargs):
@@ -264,7 +264,7 @@ class PhoneCreate(PersonObjectMixin, View):
         return render(request, self.template_name, context)
 
 
-class PhoneUpdate(PhoneObjectMixin, View):
+class PhoneUpdate(LoginRequiredMixin,PhoneObjectMixin, View):
     template_name = "phone/phone_edit.html"
 
     def get(self, request, id=None, *args, **kwargs):
@@ -298,7 +298,7 @@ class PhoneUpdate(PhoneObjectMixin, View):
         return render(request, self.template_name, context)
 
 
-class EmailCreate(PersonObjectMixin, View):
+class EmailCreate(LoginRequiredMixin,PersonObjectMixin, View):
     template_name = "email/email_add.html"
 
     def get(self, request, id=None, *args, **kwargs):
@@ -333,7 +333,7 @@ class EmailCreate(PersonObjectMixin, View):
         return render(request, self.template_name, context)
 
 
-class EmailUpdate(EmailObjectMixin, View):
+class EmailUpdate(LoginRequiredMixin,EmailObjectMixin, View):
     template_name = "email/email_edit.html"
 
     def get(self, request, id=None, *args, **kwargs):
