@@ -13,12 +13,11 @@ class UserRegistrationForm(UserCreationForm):
             'username', 'email', 'password1', 'password2'
         ]
 
-        help_texts = {
-            'username': None,
-            'email': None,
-            'password1': "",
-            'password2': None
-        }
+    def __init__(self, *args, **kwargs):
+        super(UserRegistrationForm, self).__init__(*args, **kwargs)
+
+        for fieldname in ['username', 'password1', 'password2']:
+            self.fields[fieldname].help_text = None
 
 
 class UserUpdateForm(forms.ModelForm):
