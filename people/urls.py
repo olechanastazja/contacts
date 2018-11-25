@@ -10,7 +10,11 @@ from .views import (home,
                     PersonGroupsView,
                     AddressCreate,
                     PhoneCreate,
-                    EmailCreate)
+                    EmailCreate,
+                    AddressUpdate,
+                    PhoneUpdate,
+                    EmailUpdate,
+                    email_delete)
 
 app_name = 'people'
 
@@ -24,5 +28,10 @@ urlpatterns = [
     re_path(r'^(?P<id>[0-9]+)/addAddress/$', AddressCreate.as_view(), name='address_create'),
     re_path(r'^(?P<id>[0-9]+)/addPhone/$', PhoneCreate.as_view(), name='phone_create'),
     re_path(r'^(?P<id>[0-9]+)/addEmail/$', EmailCreate.as_view(), name='email_create'),
+    re_path(r'^(?P<id>[0-9]+)/editAddress/$', AddressUpdate.as_view(), name='address_edit'),
+    # re_path(r'^(?P<id>[0-9]+)/deleteAddress/$', email_delete, name='address_delete'),
+    re_path(r'^(?P<id>[0-9]+)/editPhone/$', PhoneUpdate.as_view(), name='phone_edit'),
+    re_path(r'^(?P<id>[0-9]+)/editEmail/$', EmailUpdate.as_view(), name='email_edit'),
+    re_path(r'^(?P<id>[0-9]+)/deleteEmail/$', email_delete, name='email_delete'),
     url(r'^ajax_calls/search/', load_persons, name='search'),
 ]

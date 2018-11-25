@@ -13,6 +13,13 @@ class UserRegistrationForm(UserCreationForm):
             'username', 'email', 'password1', 'password2'
         ]
 
+        help_texts = {
+            'username': None,
+            'email': None,
+            'password1': "",
+            'password2': None
+        }
+
 
 class UserUpdateForm(forms.ModelForm):
     email = forms.EmailField()

@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 from .forms import PersonModelForm, AddressModelForm, PhoneModelForm, EmailModelForm
-from .models import Person
+from .models import Person, Address, PhoneNumber, EmailAddress
 from django.contrib import messages
 
 
@@ -11,6 +11,39 @@ def home(request):
 
 class PersonObjectMixin(object):
     model = Person
+
+    def get_object(self):
+        id = self.kwargs.get('id')
+        obj = None
+        if id is not None:
+            obj = get_object_or_404(self.model, id=id)
+        return obj
+
+
+class AddressObjectMixin(object):
+    model = Address
+
+    def get_object(self):
+        id = self.kwargs.get('id')
+        obj = None
+        if id is not None:
+            obj = get_object_or_404(self.model, id=id)
+        return obj
+
+
+class PhoneObjectMixin(object):
+    model = PhoneNumber
+
+    def get_object(self):
+        id = self.kwargs.get('id')
+        obj = None
+        if id is not None:
+            obj = get_object_or_404(self.model, id=id)
+        return obj
+
+
+class EmailObjectMixin(object):
+    model = EmailAddress
 
     def get_object(self):
         id = self.kwargs.get('id')
@@ -163,6 +196,40 @@ class AddressCreate(PersonObjectMixin, View):
         return render(request, self.template_name, context)
 
 
+class AddressUpdate(AddressObjectMixin, View):
+    template_name = "address/address_edit.html"
+
+    def get(self, request, id=None, *args, **kwargs):
+        context = {}
+        obj = self.get_object()
+        if obj is not None:
+            form = AddressModelForm(instance=obj)
+            context = {
+                'object': obj,
+                'form': form
+            }
+        return render(request, self.template_name, context)
+
+    def post(self, request, id=None, *args, **kwargs):
+        context = {}
+        obj = self.get_object()
+        if obj is not None:
+            form = AddressModelForm(request.POST, instance=obj)
+            if form.is_valid():
+                form.save()
+                context = {
+                    'object': obj,
+                    'form': form
+                }
+                return redirect("people:person-list", id=obj.person.id)
+        form = AddressModelForm()
+        context = {
+            'object': obj,
+            'form': form
+        }
+        return redirect(request, self.template_name, context)
+
+
 class PhoneCreate(PersonObjectMixin, View):
     template_name = "phone/phone_add.html"
 
@@ -189,6 +256,40 @@ class PhoneCreate(PersonObjectMixin, View):
                 phone.save()
                 return redirect("people:person-list")
         messages.error(request, form.errors.get('phone_number'))
+        form = PhoneModelForm()
+        context = {
+            'object': obj,
+            'form': form
+        }
+        return render(request, self.template_name, context)
+
+
+class PhoneUpdate(PhoneObjectMixin, View):
+    template_name = "phone/phone_edit.html"
+
+    def get(self, request, id=None, *args, **kwargs):
+        context = {}
+        obj = self.get_object()
+        if obj is not None:
+            form = PhoneModelForm(instance=obj)
+            context = {
+                'object': obj,
+                'form': form
+            }
+        return render(request, self.template_name, context)
+
+    def post(self, request, id=None, *args, **kwargs):
+        context = {}
+        obj = self.get_object()
+        if obj is not None:
+            form = PhoneModelForm(request.POST, instance=obj)
+            if form.is_valid():
+                form.save()
+                context = {
+                    'object': obj,
+                    'form': form
+                }
+                return redirect("people:person-list", id=obj.person.id)
         form = PhoneModelForm()
         context = {
             'object': obj,
@@ -230,3 +331,45 @@ class EmailCreate(PersonObjectMixin, View):
             'form': form
         }
         return render(request, self.template_name, context)
+
+
+class EmailUpdate(EmailObjectMixin, View):
+    template_name = "email/email_edit.html"
+
+    def get(self, request, id=None, *args, **kwargs):
+        context = {}
+        obj = self.get_object()
+        if obj is not None:
+            form = EmailModelForm(instance=obj)
+            context = {
+                'object': obj,
+                'form': form
+            }
+        return render(request, self.template_name, context)
+
+    def post(self, request, id=None, *args, **kwargs):
+        context = {}
+        obj = self.get_object()
+        if obj is not None:
+            form = EmailModelForm(request.POST, instance=obj)
+            if form.is_valid():
+                form.save()
+                context = {
+                    'object': obj,
+                    'form': form
+                }
+                return redirect("people:person-detail",  id=obj.person.id)
+        form = EmailModelForm()
+        context = {
+            'object': obj,
+            'form': form
+        }
+        return render(request, self.template_name, context)
+
+
+def email_delete(request, id):
+    if request.method == "POST":
+        email = EmailAddress.objects.get(id=id)
+        email.delete()
+        return redirect("people:person-detail",  id=email.person.id)
+

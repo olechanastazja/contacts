@@ -29,10 +29,11 @@
             </a>
             <form  class="ml-auto" style="display:inline-block" id="search" method="POST" action="{% url 'people:search'  %}">
                 {% csrf_token %}
-                <input type="text" id='id_username' name='txtSearch'>
+                <input type="text" id='id_username' name='txtSearch' placeholder="Find your contact..."
+                       style="width: 250px">
             </form>
-
         </div>
+
         <hr class="col" align="center">
         <table class="table table-bordered">
 

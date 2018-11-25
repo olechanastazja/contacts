@@ -20,13 +20,16 @@
             <tr>
                 <td>{{ object.first_name }}</td>
                 <td>{{ object.last_name }}</td>
-                <td><a href="{% url 'people:person-groups' id=object.id %}"><span class="glyphicon glyphicon-zoom-in"></span> Details</a></td>
+                <td><a href="{% url 'people:person-groups' id=object.id %}">
+                    <span class="glyphicon glyphicon-zoom-in"></span>Details
+                </a></td>
                 <td>{{ object.description }}</td>
             </tr>
             </thead>
         </table>
         <br>
 
+    <!-- --------------------Part of Address Updating/Deleting---------------------------------- -->
         <legend class="border-bottom mb-4">Address</legend>
         {% if object.address.all %}
             {% for item in object.address.all %}
@@ -45,10 +48,16 @@
                     <td>{{ item.street }}</td>
                     <td>{{ item.street_number }}</td>
                     <td style="text-align: center">
-                        <a href=""><span class="glyphicon glyphicon-pencil"></span></a></td>
+                        <a href="{% url 'people:address_edit' id=item.id %}">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                    </td>
                     </td>
                     <td style="text-align: center">
-                        <a href=""><span class="glyphicon glyphicon-remove"></span></a></td>
+                        <a href="#">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </a>
+                    </td>
                     </td>
                 </tr>
             </table>
@@ -58,6 +67,7 @@
             <p>There is no address right now...</p>
         {% endif %}
 
+    <!-- --------------------Part of Phone Updating/Deleting---------------------------------- -->
         <legend class="border-bottom mb-4">Phone</legend>
         {% if object.phone.all %}
             {% for item in object.phone.all %}
@@ -74,7 +84,10 @@
                         <td>{{ item.phone_number }}</td>
                         <td>{{ item.type }}</td>
                         <td style="text-align: center">
-                            <a href=""><span class="glyphicon glyphicon-pencil"></span></a></td>
+                            <a href="{% url 'people:phone_edit' id=item.id %}">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                            </a>
+                        </td>
                         </td>
                         <td style="text-align: center">
                             <a href=""><span class="glyphicon glyphicon-remove"></span></a></td>
@@ -87,6 +100,7 @@
             <p>There is no phone right now...</p>
         {% endif %}
 
+    <!-- --------------------Part of Email Updating/Deleting---------------------------------- -->
         <legend class="border-bottom mb-4">Email</legend>
         {% if object.email.all %}
             {% for item in object.email.all %}
@@ -103,10 +117,14 @@
                         <td>{{ item.email }}</td>
                         <td>{{ item.type }}</td>
                         <td style="text-align: center">
-                            <a href=""><span class="glyphicon glyphicon-pencil"></span></a></td>
+                            <a href="{% url 'people:email_edit' id=item.id %}"><span class="glyphicon glyphicon-pencil"></span></a></td>
                         </td>
                         <td style="text-align: center">
-                            <a href=""><span class="glyphicon glyphicon-remove"></span></a></td>
+                            <form action="{% url 'people:email_delete' id=item.id %}" method="post">
+                                {% csrf_token %}
+{#                                <input type="submit" value="">#}
+                                <button class="btn-link" type="submit"><span class="glyphicon glyphicon-remove"></span></button>
+                            </form>
                         </td>
                     </tr>
                 </table>
