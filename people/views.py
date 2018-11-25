@@ -3,8 +3,10 @@ from django.views import View
 from .forms import PersonModelForm, AddressModelForm, PhoneModelForm, EmailModelForm
 from .models import Person, Address, PhoneNumber, EmailAddress
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 
+@login_required
 def home(request):
     return render(request, 'people/home.html')
 
@@ -70,6 +72,7 @@ class PersonCreateView(View):
             person.user = request.user
             person.save()
             person.group.set(form.cleaned_data['group'])
+            messages.success(request, 'Person has been created')
         return redirect('people:person-list')
 
 
@@ -136,7 +139,9 @@ class PersonView(PersonObjectMixin, View):
     template_name = "people/person_detail.html"
 
     def get(self, request, id=None, *args, **kwargs):
-        context = {'object': self.get_object()}
+        obj = self.get_object()
+        context = {'object': obj}
+        request.session['redirect_id'] = obj.id
         return render(request, self.template_name, context)
 
 
@@ -160,7 +165,6 @@ def load_persons(request):
 
 
 class AddressCreate(PersonObjectMixin, View):
-
     template_name = "address/address_add.html"
 
     def get(self, request, id=None, *args, **kwargs):
@@ -184,7 +188,8 @@ class AddressCreate(PersonObjectMixin, View):
             if form.is_valid():
                 address = form.save(commit=False)
                 address.save()
-                address.people.add(obj) # Relacja many to many wymusza add zamiast set, ale jest to wymagane w warsztacie
+                address.people.add(obj)
+                messages.success(request, 'Your address has been added!')
                 return redirect("people:person-list")
 
         form = AddressModelForm()
@@ -221,13 +226,24 @@ class AddressUpdate(AddressObjectMixin, View):
                     'object': obj,
                     'form': form
                 }
-                return redirect("people:person-list", id=obj.person.id)
+                messages.success(request, 'Your address has been updated!')
+                redirect_id = request.session['redirect_id']
+                return redirect("people:person-detail", redirect_id)
         form = AddressModelForm()
         context = {
             'object': obj,
             'form': form
         }
         return redirect(request, self.template_name, context)
+
+
+def address_delete(request, id):
+    if request.method == "POST":
+        address = Address.objects.get(id=id)
+        address.delete()
+        redirect_id = request.session['redirect_id']
+        messages.success(request, 'Your address has been removed!')
+        return redirect("people:person-detail",  redirect_id)
 
 
 class PhoneCreate(PersonObjectMixin, View):
@@ -254,6 +270,7 @@ class PhoneCreate(PersonObjectMixin, View):
                 phone = form.save(commit=False)
                 phone.person = obj
                 phone.save()
+                messages.success(request, 'Your phone has been added!')
                 return redirect("people:person-list")
         messages.error(request, form.errors.get('phone_number'))
         form = PhoneModelForm()
@@ -289,13 +306,23 @@ class PhoneUpdate(PhoneObjectMixin, View):
                     'object': obj,
                     'form': form
                 }
-                return redirect("people:person-list", id=obj.person.id)
+                messages.success(request, 'Your phone has been updated!')
+                return redirect("people:person-detail", id=obj.person.id)
+        messages.error(request, form.errors.get('phone_number'))
         form = PhoneModelForm()
         context = {
             'object': obj,
             'form': form
         }
         return render(request, self.template_name, context)
+
+
+def phone_delete(request, id):
+    if request.method == "POST":
+        phone = PhoneNumber.objects.get(id=id)
+        phone.delete()
+        messages.success(request, 'Your phone has been removed!')
+        return redirect("people:person-detail",  id=phone.person.id)
 
 
 class EmailCreate(PersonObjectMixin, View):
@@ -321,10 +348,9 @@ class EmailCreate(PersonObjectMixin, View):
                 email = form.save(commit=False)
                 email.person = obj
                 email.save()
+                messages.success(request, 'Your email has been added!')
                 return redirect("people:person-list")
-
         form = EmailModelForm()
-        print(form.errors)
         messages.error(request, 'Invalid data! Correct that and try again!')
         context = {
             'object': obj,
@@ -358,6 +384,7 @@ class EmailUpdate(EmailObjectMixin, View):
                     'object': obj,
                     'form': form
                 }
+                messages.success(request, 'Your email has been updated!')
                 return redirect("people:person-detail",  id=obj.person.id)
         form = EmailModelForm()
         context = {
@@ -371,5 +398,6 @@ def email_delete(request, id):
     if request.method == "POST":
         email = EmailAddress.objects.get(id=id)
         email.delete()
+        messages.success(request, 'Your email has been removed!')
         return redirect("people:person-detail",  id=email.person.id)
 

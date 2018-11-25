@@ -54,9 +54,10 @@
                     </td>
                     </td>
                     <td style="text-align: center">
-                        <a href="#">
-                            <span class="glyphicon glyphicon-remove"></span>
-                        </a>
+                        <form action="{% url 'people:address_delete' id=item.id %}" method="post">
+                                {% csrf_token %}
+                                <button class="btn-link" type="submit"><span class="glyphicon glyphicon-remove"></span></button>
+                        </form>
                     </td>
                     </td>
                 </tr>
@@ -90,7 +91,10 @@
                         </td>
                         </td>
                         <td style="text-align: center">
-                            <a href=""><span class="glyphicon glyphicon-remove"></span></a></td>
+                            <form action="{% url 'people:phone_delete' id=item.id %}" method="post">
+                                {% csrf_token %}
+                                <button class="btn-link" type="submit"><span class="glyphicon glyphicon-remove"></span></button>
+                            </form>
                         </td>
                     </tr>
                 </table>
@@ -122,7 +126,6 @@
                         <td style="text-align: center">
                             <form action="{% url 'people:email_delete' id=item.id %}" method="post">
                                 {% csrf_token %}
-{#                                <input type="submit" value="">#}
                                 <button class="btn-link" type="submit"><span class="glyphicon glyphicon-remove"></span></button>
                             </form>
                         </td>
